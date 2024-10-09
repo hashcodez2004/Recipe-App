@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Recipe-App</string>
+    <string name="welcome_to_reciipiie">Welcome to \n<b>Rec</b>ii<b>p</b>ii<b>e</b></string>
+    <string name="please_signin_to_continue">Please signin to continue</string>
+    <string name="continue_with_google">Continue with google</string>
+    <string name="hey_user">👋 Hey User</string>
+    <string name="discover_tasty_and_healthy_receipt">Discover tasty and healthy receipt</string>
+</resources>
