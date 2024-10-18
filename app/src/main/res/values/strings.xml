@@ -5,4 +5,6 @@
     <string name="continue_with_google">Continue with google</string>
     <string name="hey_user">👋 Hey User</string>
     <string name="discover_tasty_and_healthy_receipt">Discover tasty and healthy receipt</string>
+    <string name="popular_recipes">Popular Recipes</string>
+    <string name="all_recipes">All Recipes</string>
 </resources>
