@@ -38,7 +38,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/search_view"
         />
-    
+
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,6 +57,70 @@
         android:lineHeight="20sp"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_view3"
+        app:layout_constraintTop_toBottomOf="@id/search_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/popular_recipes"
+        android:textColor="#171B21"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:textFontWeight="700"
+        android:lineHeight="24sp"
+        android:layout_marginStart="16dp"
+        />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recycler_view1"
+            app:layout_constraintTop_toBottomOf="@id/txt_view3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_view4"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view1"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/all_recipes"
+        android:textColor="#171B21"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:textFontWeight="700"
+        android:lineHeight="24sp"
+        android:layout_marginStart="16dp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_view2"
+        app:layout_constraintTop_toBottomOf="@id/txt_view4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_view2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
