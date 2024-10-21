@@ -9,6 +9,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="match_parent"
+        android:id="@+id/dish_image2"
         android:src="@drawable/ic_launcher_background"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +19,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Text_View1Text_View1"
+            android:id="@+id/dish_name2"
+            android:text="Text_View1"
             android:layout_marginLeft="4dp"
             android:textColor="#000000"
             android:fontFamily="@font/inter_medium"
@@ -28,7 +30,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="text_view2text_view2"
+            android:id="@+id/cook_time2"
+            android:text="text_view2"
             android:layout_marginLeft="4dp"
             android:textColor="#606F89"
             android:fontFamily="@font/inter_medium"
