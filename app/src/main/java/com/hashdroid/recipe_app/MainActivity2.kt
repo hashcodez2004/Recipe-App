@@ -58,7 +58,7 @@ class MainActivity2 : AppCompatActivity() {
     private fun fetchAllRecipes() {
         val apiKey = "195f87d5a199467797f27b34555430e1"
         val retrofit = RetrofitClient.retrofit
-        val call = retrofit.getAllRecipes(10, apiKey)
+        val call = retrofit.getAllRecipes(50, apiKey)
         call.enqueue(object : Callback<RecipeResponse2> {
             override fun onResponse(call: Call<RecipeResponse2>, response: Response<RecipeResponse2>) {
                 if (response.isSuccessful) {
