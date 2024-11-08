@@ -61,14 +61,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchAllRecipes(view: View) {
-        val apiKey = "195f87d5a199467797f27b34555430e1"
+        val apiKey = "7e09bf0f61914144b91065b5d90803ea"
         val retrofit = RetrofitClient.retrofit
         val call = retrofit.getAllRecipes(50, apiKey)
         call.enqueue(object : Callback<RecipeResponse2> {
             override fun onResponse(call: Call<RecipeResponse2>, response: Response<RecipeResponse2>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { recipes ->
-                        verticalAdapter = VerticalAdapter(recipes)
+                        verticalAdapter = VerticalAdapter(recipes){ recipieId ->
+                            openFragmentRecipieView(recipieId)
+                        }
                         view.findViewById<RecyclerView>(R.id.recycler_view2).adapter = verticalAdapter
                     }
                 }
@@ -78,5 +80,23 @@ class HomeFragment : Fragment() {
                 // Handle API call failure
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Show BottomNavigationView when returning to HomeFragment
+        activity?.findViewById<View>(R.id.bottom_navigation_view)?.visibility = View.VISIBLE
+    }
+
+
+    private fun openFragmentRecipieView(recipieId: Int){
+        val fragment = recipie_view.newInstance(recipieId)
+
+        activity?.findViewById<View>(R.id.bottom_navigation_view)?.visibility = View.GONE
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.frame_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
