@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchAllRecipes(view: View) {
-        val apiKey = "7e09bf0f61914144b91065b5d90803ea"
+        val apiKey = "195f87d5a199467797f27b34555430e1"
         val retrofit = RetrofitClient.retrofit
         val call = retrofit.getAllRecipes(50, apiKey)
         call.enqueue(object : Callback<RecipeResponse2> {

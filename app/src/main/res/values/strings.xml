@@ -7,7 +7,11 @@
     <string name="discover_tasty_and_healthy_receipt">Discover tasty and healthy receipt</string>
     <string name="popular_recipes">Popular Recipes</string>
     <string name="all_recipes">All Recipes</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="favourite_recipes">Favourite recipes</string>
+    <string name="onion">Onion</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="instructions">Instructions</string>
+    <string name="quick_summary">Quick Summary</string>
+    <string name="equipments">Equipments</string>
 </resources>
