@@ -55,14 +55,13 @@ class recipie_view : Fragment() {
         val toggle_img2 = view.findViewById<ImageView>(R.id.Bad_for_health_image)
         val toggle_img3 = view.findViewById<ImageView>(R.id.Good_for_health_image)
         val nutrition_textview1 = view.findViewById<TextView>(R.id.nutrition_textview)
-        val nutrition_textview2 = view.findViewById<TextView>(R.id.Bad_for_health_textview)
-        val nutrition_textview3 = view.findViewById<TextView>(R.id.Good_for_health_textview)
-
+        val Bad_for_health_textview2 = view.findViewById<TextView>(R.id.Bad_for_health_textview)
+        val Good_for_health_textview3 = view.findViewById<TextView>(R.id.Good_for_health_textview)
 
         //making text view initially gone
         nutrition_textview1.isVisible = false
-        nutrition_textview2.isVisible = false
-        nutrition_textview3.isVisible = false
+        Bad_for_health_textview2.isVisible = false
+        Good_for_health_textview3.isVisible = false
 
         toggle_img1.setOnClickListener {
             // Toggle the visibility of the TextView
@@ -79,15 +78,15 @@ class recipie_view : Fragment() {
             }
         }
 
-        toggle_img1.setOnClickListener {
+        toggle_img2.setOnClickListener {
             // Toggle the visibility of the TextView
-            nutrition_textview2.visibility = if (nutrition_textview2.visibility == View.VISIBLE) {
+            Bad_for_health_textview2.visibility = if (Bad_for_health_textview2.visibility == View.VISIBLE) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
 
-            if (nutrition_textview2.visibility == View.VISIBLE) {
+            if (Bad_for_health_textview2.visibility == View.VISIBLE) {
                 toggle_img2.setImageResource(R.drawable.drop_up_arrow)
             } else {
                 toggle_img2.setImageResource(R.drawable.drop_down_arrow)
@@ -96,13 +95,13 @@ class recipie_view : Fragment() {
 
         toggle_img3.setOnClickListener {
             // Toggle the visibility of the TextView
-            nutrition_textview3.visibility = if (nutrition_textview3.visibility == View.VISIBLE) {
+            Good_for_health_textview3.visibility = if (Good_for_health_textview3.visibility == View.VISIBLE) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
 
-            if (nutrition_textview3.visibility == View.VISIBLE) {
+            if (Good_for_health_textview3.visibility == View.VISIBLE) {
                 toggle_img3.setImageResource(R.drawable.drop_up_arrow)
             } else {
                 toggle_img3.setImageResource(R.drawable.drop_down_arrow)
@@ -115,7 +114,7 @@ class recipie_view : Fragment() {
     }
 
     private fun fetchRecipeView() {
-        val apiKey = "195f87d5a199467797f27b34555430e1" //"7e09bf0f61914144b91065b5d90803ea"
+        val apiKey = "6511024c4bb146f09491fe45f612b0ab" //"195f87d5a199467797f27b34555430e1" //"7e09bf0f61914144b91065b5d90803ea"
         val retrofit = RetrofitClient.retrofit
         val call = recipeId?.let { retrofit.getRecipieView(it, apiKey) }
 
