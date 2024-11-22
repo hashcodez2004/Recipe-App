@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hashdroid.recipe_app.com.hashdroid.recipe_app.VerticalAdapter
@@ -13,6 +14,7 @@ import com.hashdroid.recipe_app.network.RecipeResponse2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.hashdroid.recipe_app.SearchViewFragment
 
 class HomeFragment : Fragment() {
 
@@ -25,6 +27,22 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        //Open the search fragment when clicked on the search bar
+        val search_view = view.findViewById<LinearLayout>(R.id.search_view)
+        search_view.setOnClickListener{
+            // Hide the bottom navigation if applicable
+            activity?.findViewById<View>(R.id.bottom_navigation_view)?.visibility = View.GONE
+
+            // Create an instance of the fragment you want to open
+            val searchFragment = SearchViewFragment()
+
+            // Perform fragment transaction
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_container, searchFragment) // Replace frame_container with your fragment container ID
+                .addToBackStack(null) // Add to back stack for proper back navigation
+                .commit()
+        }
 
         // Initialize RecyclerView
         val recyclerView1 = view.findViewById<RecyclerView>(R.id.recycler_view1)

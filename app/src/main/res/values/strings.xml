@@ -17,4 +17,5 @@
     <string name="nutrition">Nutrition</string>
     <string name="bad_for_health_nutrition">Bad for health nutrition</string>
     <string name="good_for_health_nutrition">Good for health nutrition</string>
+    <string name="search_any_recipe">Search any recipe</string>
 </resources>

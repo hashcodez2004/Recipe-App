@@ -12,28 +12,40 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.room.Database
 import com.bumptech.glide.Glide
 import com.hashdroid.recipe_app.network.Equipment
+import com.hashdroid.recipe_app.network.FavouritesDB
+import com.hashdroid.recipe_app.network.FavouritesEntity
 import com.hashdroid.recipe_app.network.Ingredient
 import com.hashdroid.recipe_app.network.RecipeResponse
 import com.hashdroid.recipe_app.network.RecipieView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class recipie_view : Fragment() {
     private lateinit var ingredientsAdapter: IngredientsAdapter
     private lateinit var equipmentsAdapter: EquipmentsAdapter
     private var recipeId: Int? = null
+    private lateinit var database: FavouritesDB
+    private var isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             recipeId = it.getInt(ARG_RECIPE_ID)
         }
+
+        database = FavouritesDB.getDatabase(requireContext())
     }
 
     override fun onCreateView(
@@ -108,9 +120,54 @@ class recipie_view : Fragment() {
             }
         }
 
+        // NEW: Favorite icon handling
+        val favoriteImage = view.findViewById<ImageView>(R.id.favourites_img)
+        favoriteImage.setOnClickListener {
+            toggleFavoriteStatus(favoriteImage) // NEW: Handle favorite toggle
+        }
+
+        recipeId?.let { checkIfFavorite(it) }
+
         fetchRecipeView()
 
         return view
+    }
+
+    private fun toggleFavoriteStatus(favoriteImage: ImageView) {
+        lifecycleScope.launch {
+            recipeId?.let { id ->
+                if (isFavorite) {
+                    removeFromFavorites(id) // NEW: Remove from favorites
+                    favoriteImage.setImageResource(R.drawable.heart_empty)
+                    isFavorite = false
+                } else {
+                    addToFavorites(id) // NEW: Add to favorites
+                    favoriteImage.setImageResource(R.drawable.heart_filled)
+                    isFavorite = true
+                }
+            }
+        }
+    }
+
+    private suspend fun addToFavorites(recipeId: Int) {
+        val title = view?.findViewById<TextView>(R.id.recipeid_textview1)?.text.toString()
+        val imageUrl = view?.findViewById<ImageView>(R.id.fragment_dish_image)?.tag.toString()
+        val cookingTime = view?.findViewById<TextView>(R.id.box1_text2)?.text.toString().toInt()
+
+        val favorite = FavouritesEntity(recipeId, title, imageUrl, cookingTime)
+        withContext(Dispatchers.IO) {
+            database.favouritesDAO().addToFavorites(favorite)
+        }
+        Toast.makeText(requireContext(), "Added to favorites", Toast.LENGTH_SHORT).show()
+    }
+
+
+    private suspend fun removeFromFavorites(recipeId: Int) {
+        val favorite = FavouritesEntity(recipeId, "", "", 0) // Only ID is needed to remove
+        withContext(Dispatchers.IO) {
+            database.favouritesDAO().removeFromFavorites(favorite)
+        }
+        Toast.makeText(requireContext(), "Removed from favorites", Toast.LENGTH_SHORT).show()
     }
 
     private fun fetchRecipeView() {
@@ -177,9 +234,6 @@ class recipie_view : Fragment() {
                         if (box3_text2 != null) {
                             box3_text2.text = it.pricePerServing.toString()
                         }
-
-//                        val nutrition_textview = view.findViewById<TextView>(R.id.nutrition_textview)
-//                        nutrition_textview.text = it.
                     }
                 }
             }
@@ -190,6 +244,18 @@ class recipie_view : Fragment() {
         })
     }
 
+    private fun checkIfFavorite(recipeId: Int) {
+        // Observe LiveData to get the favorites list
+        database.favouritesDAO().getAllFavorites().observe(viewLifecycleOwner) { favoritesList ->
+            val favorite = favoritesList.find { it.id == recipeId }
+            isFavorite = favorite != null
+            val favoriteImage = view?.findViewById<ImageView>(R.id.favourites_img)
+            favoriteImage?.setImageResource(
+                if (isFavorite) R.drawable.heart_filled
+                else R.drawable.heart_empty
+            )
+        }
+    }
 
 
     companion object {

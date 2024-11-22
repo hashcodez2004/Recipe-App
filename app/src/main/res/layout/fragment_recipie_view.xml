@@ -43,6 +43,16 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="24dp"
             android:text="Harsh"/>
+        
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/favourites_img"
+            android:src="@drawable/heart_empty"
+            app:layout_constraintTop_toTopOf="@id/fragment_dish_image"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/box1"
