@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recipeapp.SearchFragment
 import com.hashdroid.recipe_app.com.hashdroid.recipe_app.VerticalAdapter
 import com.hashdroid.recipe_app.network.RecipeResponse
 import com.hashdroid.recipe_app.network.RecipeResponse2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.hashdroid.recipe_app.SearchViewFragment
 
 class HomeFragment : Fragment() {
 
@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
             activity?.findViewById<View>(R.id.bottom_navigation_view)?.visibility = View.GONE
 
             // Create an instance of the fragment you want to open
-            val searchFragment = SearchViewFragment()
+            val searchFragment = SearchFragment()
 
             // Perform fragment transaction
             parentFragmentManager.beginTransaction()
@@ -59,14 +59,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchRandomRecipes(view: View) {
-        val apiKey = "6511024c4bb146f09491fe45f612b0ab" //"7e09bf0f61914144b91065b5d90803ea" //195f87d5a199467797f27b34555430e1
+        val apiKey = "7e09bf0f61914144b91065b5d90803ea" //"6511024c4bb146f09491fe45f612b0ab" //195f87d5a199467797f27b34555430e1
         val retrofit = RetrofitClient.retrofit
         val call = retrofit.getRandomRecipes(10, apiKey)
         call.enqueue(object : Callback<RecipeResponse> {
             override fun onResponse(call: Call<RecipeResponse>, response: Response<RecipeResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.recipes?.let { recipes ->
-                        horizontalAdapter = HorizontalAdapter(recipes)
+                        horizontalAdapter = HorizontalAdapter(recipes){ recipieId ->
+                            openFragmentRecipieView(recipieId)
+                        }
                         view.findViewById<RecyclerView>(R.id.recycler_view1).adapter = horizontalAdapter
                     }
                 }
@@ -90,6 +92,7 @@ class HomeFragment : Fragment() {
                             openFragmentRecipieView(recipieId)
                         }
                         view.findViewById<RecyclerView>(R.id.recycler_view2).adapter = verticalAdapter
+
                     }
                 }
             }

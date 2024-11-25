@@ -1,5 +1,6 @@
 package com.hashdroid.recipe_app
 
+import com.hashdroid.recipe_app.network.Recipe
 import com.hashdroid.recipe_app.network.RecipeResponse
 import com.hashdroid.recipe_app.network.RecipeResponse2
 import com.hashdroid.recipe_app.network.RecipieView
@@ -7,6 +8,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+
 
 interface RecipeApiService {
     @GET("recipes/random")
@@ -26,5 +28,11 @@ interface RecipeApiService {
         @Path("id") id: Int,
         @Query("apiKey") apiKey: String
     ): Call<RecipieView>
+
+    @GET("recipes/autocomplete")
+    fun getAutocompleteRecipes(
+        @Query("query") query: String?,
+        @Query("apiKey") apiKey: String
+    ): Call<List<Recipe>>
 }
 

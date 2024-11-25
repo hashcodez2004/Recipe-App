@@ -10,7 +10,10 @@ import com.bumptech.glide.Glide
 import com.hashdroid.recipe_app.network.Recipe
 import kotlin.random.Random
 
-class HorizontalAdapter(private val recipes: List<Recipe>) : RecyclerView.Adapter<MyViewHolder>() {
+class HorizontalAdapter(
+    private val recipes: List<Recipe>,
+    private val onRecipeClick: (Int) -> Unit // Lambda function for click listener
+) : RecyclerView.Adapter<MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -32,6 +35,11 @@ class HorizontalAdapter(private val recipes: List<Recipe>) : RecyclerView.Adapte
         Glide.with(holder.itemView.context)
             .load(recipe.image)
             .into(holder.dish_image)
+
+        // Handle item click
+        holder.itemView.setOnClickListener {
+            onRecipeClick(recipe.id) // Pass the recipe ID to the click listener
+        }
     }
 }
 
