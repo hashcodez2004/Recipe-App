@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,34 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hashdroid.recipe_app.R
 import com.hashdroid.recipe_app.RetrofitClient
+import com.hashdroid.recipe_app.network.DishOverview
 import com.hashdroid.recipe_app.network.Recipe
 import com.hashdroid.recipe_app.network.SearchViewAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-//class SearchFragment : Fragment() {
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//
-//        return inflater.inflate(R.layout.fragment_search_view, container, false)
-//    }
-//
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        // Find the EditText
-//        val editText: EditText = view.findViewById(R.id.search_bar1)
-//
-//        editText.requestFocus()
-//
-//        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-//    }
-//}
 
 class SearchFragment : Fragment() {
 
@@ -65,11 +44,11 @@ class SearchFragment : Fragment() {
         // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.search_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        adapter = SearchViewAdapter(emptyList()) { recipeId ->
-//            openRecipeDetailFragment(recipeId)
-//        }
+        adapter = SearchViewAdapter(emptyList()) { recipeId ->
+            openRecipeDetailFragment(recipeId)
+        }
 
-        adapter = SearchViewAdapter(emptyList())
+//        adapter = SearchViewAdapter(emptyList())
         recyclerView.adapter = adapter
 
         // Find EditText
@@ -109,7 +88,11 @@ class SearchFragment : Fragment() {
             override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
                 if (response.isSuccessful) {
                     val recipes = response.body() ?: emptyList()
+                    Log.d("API Response", "Number of recipes: ${recipes.size}")
                     adapter.updateRecipes(recipes) // Update RecyclerView adapter
+                }
+                else{
+                    Log.e("API Response", "Error: ${response.errorBody()?.string()}")
                 }
             }
 
@@ -122,11 +105,8 @@ class SearchFragment : Fragment() {
 
 
     //used for opening new fragment when user clicks on the recycler view item
-//    private fun openRecipeDetailFragment(recipeId: Int) {
-//        val fragment = RecipeDetailFragment.newInstance(recipeId)
-//        parentFragmentManager.beginTransaction()
-//            .replace(R.id.frame_container, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//    }
+    private fun openRecipeDetailFragment(recipeId: Int) {
+        val fragment = DishOverview.newInstance(recipeId)
+        fragment.show(parentFragmentManager, "DishOverview")
+    }
 }

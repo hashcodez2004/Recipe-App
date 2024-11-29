@@ -1,7 +1,5 @@
 package com.hashdroid.recipe_app
 
-import android.content.ContentValues.TAG
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,14 +13,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
-import androidx.room.Database
 import com.bumptech.glide.Glide
 import com.hashdroid.recipe_app.network.Equipment
 import com.hashdroid.recipe_app.network.FavouritesDB
 import com.hashdroid.recipe_app.network.FavouritesEntity
 import com.hashdroid.recipe_app.network.Ingredient
-import com.hashdroid.recipe_app.network.RecipeResponse
 import com.hashdroid.recipe_app.network.RecipieView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

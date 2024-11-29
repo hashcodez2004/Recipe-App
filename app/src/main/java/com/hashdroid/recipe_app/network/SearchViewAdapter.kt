@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hashdroid.recipe_app.R
 
-class SearchViewAdapter(private var recipes: List<Recipe>,   //made the recipes var intead of val because it is now mutable
-//    private val onItemClick: (Int) -> Unit
+class SearchViewAdapter(private var recipes: List<Recipe>,   //made the recipes var instead of val because it is now mutable
+    private val onItemClick: (Int) -> Unit
     ) : RecyclerView.Adapter<SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
@@ -25,9 +25,9 @@ class SearchViewAdapter(private var recipes: List<Recipe>,   //made the recipes 
         val recipe = recipes[position]
         holder.dishTitle.text = recipe.title
 
-//        holder.root.setOnClickListener{
-//            onItemClick(recipe.id)
-//        }
+        holder.root.setOnClickListener{
+            onItemClick(recipe.id)
+        }
     }
 
     // Added this method to dynamically update the adapter's data
