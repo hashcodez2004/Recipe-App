@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +21,8 @@ import retrofit2.Response
 class IngredientsDishOverview : BottomSheetDialogFragment() {
     private var recipieId: Int? = null
     private lateinit var ingredientAdapter: IngredientsAdapter
+    private lateinit var ingredientsDishoverview_rv: RecyclerView
+    private lateinit var button: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,54 +37,63 @@ class IngredientsDishOverview : BottomSheetDialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_ingredients_dishoverview, container, false)
 
-        // Initialize the recycler view
-        val ingredientsDishoverview_rv = view.findViewById<RecyclerView>(R.id.recycler_view_dishoverview)
+        //initialised the recycler view
+        ingredientsDishoverview_rv = view.findViewById(R.id.recycler_view_dishoverview)
         val gridLayoutManager = GridLayoutManager(context, 3)
         ingredientsDishoverview_rv.layoutManager = gridLayoutManager
 
-        fetchDishOverviewIngredients(ingredientsDishoverview_rv)  // Pass RecyclerView here
+        button = view.findViewById(R.id.btn_ingredients_dishoverview)
+        button.setOnClickListener {
+            val nextFragment = recipieId?.let {
+                id -> Full_Recipie_Dishoverview.newInstance(id)
+            }
+
+            dismiss()
+            if(nextFragment != null) {
+                nextFragment.show(parentFragmentManager, "Full_Recipe_Dishoverview")
+            }
+        }
+
+        fetchDishOverviewIngredients()
         return view
     }
 
-    private fun fetchDishOverviewIngredients(ingredientsDishoverview_rv: RecyclerView) {
+    private fun fetchDishOverviewIngredients(){
         val apiKey = "6511024c4bb146f09491fe45f612b0ab"
         val retrofit = RetrofitClient.retrofit
         val call = recipieId?.let { retrofit.getRecipieView(it, apiKey) }
 
         call?.enqueue(object : Callback<RecipieView> {
             override fun onResponse(call: Call<RecipieView>, response: Response<RecipieView>) {
-                if (response.isSuccessful) {
+                if(response.isSuccessful) {
                     Log.d(TAG, "API call successful: ${response.code()}")
                     Toast.makeText(requireContext(), "API call successful!", Toast.LENGTH_SHORT).show()
-
                     response.body()?.let {
-                        val list = mutableListOf<Ingredient>()
 
-                        // Extract ingredients from analyzed instructions
-                        it.analyzedInstructions.forEach { instruction ->
-                            instruction.steps.forEach { step ->
-                                list.addAll(step.ingredients)
+                        val title = view?.findViewById<TextView>(R.id.imgTitle_dishOverview)
+                        title?.text = it.title
+
+                        val list = mutableListOf<Ingredient>()
+                        it.analyzedInstructions.forEach {
+                            it.steps.forEach {
+                                list.addAll(it.ingredients)
                             }
                         }
 
-                        // Initialize the adapter with the fetched data
                         ingredientAdapter = IngredientsAdapter(list)
-
-                        // Set the adapter to RecyclerView after data is fetched
                         ingredientsDishoverview_rv.adapter = ingredientAdapter
-
-                        // Notify the adapter to update the UI
-                        ingredientAdapter.notifyDataSetChanged()
                     }
-                } else {
+                }
+                else {
                     Log.e(TAG, "API call failed: ${response.errorBody()?.string()}")
                     Toast.makeText(requireContext(), "API call failed: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<RecipieView>, t: Throwable) {
-                Toast.makeText(requireContext(), t.localizedMessage, Toast.LENGTH_SHORT).show()
+            override fun onFailure(p0: Call<RecipieView>, p1: Throwable) {
+                Toast.makeText(requireContext(), p1.localizedMessage, Toast.LENGTH_SHORT).show()
             }
+
         })
     }
 

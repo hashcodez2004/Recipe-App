@@ -24,4 +24,6 @@
     <string name="get_ingredients">Get ingredients</string>
     <string name="button_text">button_text</string>
     <string name="get_full_recipie">Get full recipie</string>
+    <string name="full_recipe">Full recipe</string>
+    <string name="get_similar_recipe">Get similar recipe</string>
 </resources>

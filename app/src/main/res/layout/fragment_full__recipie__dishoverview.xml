@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Full_Recipie_Dishoverview">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/dishOverview"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/back_arrow"
+            android:contentDescription="@string/previous_fragment"
+            android:src="@drawable/dish_overview_arrow"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:text="@string/shahi_paneer"
+            android:id="@+id/imgTitle_dishOverview"
+            android:textColor="#171B21"
+            android:fontFamily="@font/inter_medium"
+            android:textSize="18sp"
+            android:textFontWeight="500"
+            android:lineHeight="24sp"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"/>
+
+        <ImageView
+            android:id="@+id/favourites_dishOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dp"
+            android:contentDescription="@string/favourites"
+            android:src="@drawable/heart_empty"
+            android:scaleType="centerCrop"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/ingredient"
+        app:layout_constraintTop_toBottomOf="@id/dishOverview">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/ingredient_heading"
+            android:text="@string/ingredients"
+            android:textColor="#171B21"
+            android:fontFamily="@font/inter_medium"
+            android:textSize="18sp"
+            android:textFontWeight="500"
+            android:lineHeight="24sp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="center_vertical"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ingredient_image"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/previous_fragment"
+            android:src="@drawable/arrow_down"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/full_recipie"
+        app:layout_constraintTop_toBottomOf="@id/ingredient">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/full_recipie_heading"
+            android:text="@string/full_recipe"
+            android:textColor="#171B21"
+            android:fontFamily="@font/inter_medium"
+            android:textSize="18sp"
+            android:textFontWeight="500"
+            android:lineHeight="24sp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="center_vertical"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/full_recipie_image"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/previous_fragment"
+            android:src="@drawable/arrow_down"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/full_recipie_scrollable"
+        app:layout_constraintTop_toBottomOf="@id/full_recipie">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/main">
+
+
+
+            <TextView
+                android:id="@+id/recipeid_textview2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/inter_medium"
+                android:text="@string/instructions"
+                android:textColor="#171B21"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipeid_textview3"
+                app:layout_constraintTop_toBottomOf="@id/recipeid_textview2"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="#606F89"
+                android:textSize="14sp"
+                android:textFontWeight="400"
+                android:lineHeight="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipeid_textview4"
+                app:layout_constraintTop_toBottomOf="@id/recipeid_textview3"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/equipments"
+                android:fontFamily="@font/inter_medium"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:textColor="#171B21"
+                android:textSize="16sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/equipments_rv"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/recipeid_textview4"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipeid_textview5"
+                app:layout_constraintTop_toBottomOf="@id/equipments_rv"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/quick_summary"
+                android:fontFamily="@font/inter_medium"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:textColor="#171B21"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipeid_textview6"
+                app:layout_constraintTop_toBottomOf="@id/recipeid_textview5"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="#606F89"
+                android:textSize="14sp"
+                android:textFontWeight="400"
+                android:lineHeight="20sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/nutrition"
+                android:background="#F2F7FD"
+                app:layout_constraintTop_toBottomOf="@id/recipeid_textview6"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nutrition_ll">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/nutrition_heading"
+                        android:text="@string/nutrition"
+                        android:fontFamily="@font/inter_medium"
+                        android:textStyle="bold"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:textColor="#171B21"
+                        android:textSize="16sp"/>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:id="@+id/nutrition_image"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="dropDown_and_dropUp"
+                        android:src="@drawable/drop_up_arrow"/>
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/nutrition_textview"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Lorem ipsum dolor sit amet consectetur. Sagittis facilisis aliquet aenean lorem ullamcorper et. Risus lectus id sed fermentum in. At porta sed ut lorem volutpat elementum mi sollicitudin. Laoreet tempor nullam velit dui amet mauris sed ac sem."
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="#606F89"
+                    android:textSize="14sp"
+                    android:textFontWeight="400"
+                    android:lineHeight="20sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/Bad_for_health"
+                android:background="#F2F7FD"
+                app:layout_constraintTop_toBottomOf="@id/nutrition"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Bad_for_health_ll">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/Bad_for_health_heading"
+                        android:text="@string/bad_for_health_nutrition"
+                        android:fontFamily="@font/inter_medium"
+                        android:textStyle="bold"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:textColor="#171B21"
+                        android:textSize="16sp"/>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:id="@+id/Bad_for_health_image"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="dropDown_and_dropUp"
+                        android:src="@drawable/drop_up_arrow"/>
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/Bad_for_health_textview"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Lorem ipsum dolor sit amet consectetur. Sagittis facilisis aliquet aenean lorem ullamcorper et. Risus lectus id sed fermentum in. At porta sed ut lorem volutpat elementum mi sollicitudin. Laoreet tempor nullam velit dui amet mauris sed ac sem."
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="#606F89"
+                    android:textSize="14sp"
+                    android:textFontWeight="400"
+                    android:lineHeight="20sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/Good_for_health"
+                android:background="#F2F7FD"
+                app:layout_constraintTop_toBottomOf="@id/Bad_for_health"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Good_for_health_ll">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/Good_for_health_heading"
+                        android:text="@string/good_for_health_nutrition"
+                        android:fontFamily="@font/inter_medium"
+                        android:textStyle="bold"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:textColor="#171B21"
+                        android:textSize="16sp"/>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:id="@+id/Good_for_health_image"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="dropDown_and_dropUp"
+                        android:src="@drawable/drop_up_arrow"/>
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/Good_for_health_textview"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Lorem ipsum dolor sit amet consectetur. Sagittis facilisis aliquet aenean lorem ullamcorper et. Risus lectus id sed fermentum in. At porta sed ut lorem volutpat elementum mi sollicitudin. Laoreet tempor nullam velit dui amet mauris sed ac sem."
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="#606F89"
+                    android:textSize="14sp"
+                    android:textFontWeight="400"
+                    android:lineHeight="20sp"/>
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:id="@+id/btn_fullRecipie_dishoverview"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Good_for_health_textview"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/rounded_button">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/get_similar_recipe"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/button_text"
+            android:src="@drawable/keyboard_arrow_right"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
