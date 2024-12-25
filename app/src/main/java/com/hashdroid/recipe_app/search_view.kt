@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@ class SearchFragment : Fragment() {
     private lateinit var adapter: SearchViewAdapter
     private val handler = Handler(Looper.getMainLooper()) // For debouncing API calls
     private var searchRunnable: Runnable? = null // Keeps track of the current search task
+    private lateinit var back: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +43,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        back=view.findViewById(R.id.search_img)
+        back.setOnClickListener{
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
         // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.search_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -48,12 +55,16 @@ class SearchFragment : Fragment() {
             openRecipeDetailFragment(recipeId)
         }
 
-//        adapter = SearchViewAdapter(emptyList())
         recyclerView.adapter = adapter
 
         // Find EditText
         val editText: EditText = view.findViewById(R.id.search_bar1)
         editText.requestFocus()
+
+        val remove = view.findViewById<ImageView>(R.id.search_img2)
+        remove.setOnClickListener{
+            editText.setText("")
+        }
 
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
@@ -76,20 +87,20 @@ class SearchFragment : Fragment() {
     private fun fetchRecipes(query: String) {
         if (query.isEmpty()) {
             // Clear the RecyclerView if query is empty
-            adapter.updateRecipes(emptyList())
+            adapter.updateRecipes(emptyList(), query)
             return
         }
 
         val retrofit = RetrofitClient.retrofit
-        val apiKey = "6511024c4bb146f09491fe45f612b0ab"
-        val call = retrofit.getAutocompleteRecipes(query, apiKey)
+//        val apiKey =  "7e09bf0f61914144b91065b5d90803ea"//"6511024c4bb146f09491fe45f612b0ab"
+        val call = retrofit.getAutocompleteRecipes(query)
 
         call.enqueue(object : Callback<List<Recipe>> {
             override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
                 if (response.isSuccessful) {
                     val recipes = response.body() ?: emptyList()
                     Log.d("API Response", "Number of recipes: ${recipes.size}")
-                    adapter.updateRecipes(recipes) // Update RecyclerView adapter
+                    adapter.updateRecipes(recipes, query) // Update RecyclerView adapter
                 }
                 else{
                     Log.e("API Response", "Error: ${response.errorBody()?.string()}")
@@ -98,7 +109,7 @@ class SearchFragment : Fragment() {
 
             override fun onFailure(call: Call<List<Recipe>>, t: Throwable) {
                 // Handle API failure (e.g., show a message or clear RecyclerView)
-                adapter.updateRecipes(emptyList())
+                adapter.updateRecipes(emptyList(), query)
             }
         })
     }

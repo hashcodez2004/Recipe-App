@@ -59,9 +59,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchRandomRecipes(view: View) {
-        val apiKey = "7e09bf0f61914144b91065b5d90803ea" //"6511024c4bb146f09491fe45f612b0ab" //195f87d5a199467797f27b34555430e1
+//        val apiKey = "7e09bf0f61914144b91065b5d90803ea" //"6511024c4bb146f09491fe45f612b0ab" //195f87d5a199467797f27b34555430e1
         val retrofit = RetrofitClient.retrofit
-        val call = retrofit.getRandomRecipes(10, apiKey)
+        val call = retrofit.getRandomRecipes(10)
         call.enqueue(object : Callback<RecipeResponse> {
             override fun onResponse(call: Call<RecipeResponse>, response: Response<RecipeResponse>) {
                 if (response.isSuccessful) {
@@ -81,9 +81,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchAllRecipes(view: View) {
-        val apiKey = "6511024c4bb146f09491fe45f612b0ab" //"7e09bf0f61914144b91065b5d90803ea" //195f87d5a199467797f27b34555430e1
+//        val apiKey = "7e09bf0f61914144b91065b5d90803ea" //"6511024c4bb146f09491fe45f612b0ab" //"7e09bf0f61914144b91065b5d90803ea" //195f87d5a199467797f27b34555430e1
         val retrofit = RetrofitClient.retrofit
-        val call = retrofit.getAllRecipes(50, apiKey)
+        val call = retrofit.getAllRecipes(50)
         call.enqueue(object : Callback<RecipeResponse2> {
             override fun onResponse(call: Call<RecipeResponse2>, response: Response<RecipeResponse2>) {
                 if (response.isSuccessful) {

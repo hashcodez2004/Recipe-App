@@ -6,14 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.hashdroid.recipe_app.network.DishOverview
 import com.hashdroid.recipe_app.network.Equipment
+import com.hashdroid.recipe_app.network.FavouritesDB
+import com.hashdroid.recipe_app.network.FavouritesEntity
 import com.hashdroid.recipe_app.network.RecipieView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,12 +30,23 @@ import retrofit2.Response
 class Full_Recipie_Dishoverview : BottomSheetDialogFragment() {
     private lateinit var equipmentsAdapter: EquipmentsAdapter
     private var recipeId: Int? = null
+    private lateinit var button_dishOverview: LinearLayout
+    private lateinit var btn1: ImageView
+    private lateinit var btn2: ImageView
+    private lateinit var database: FavouritesDB
+    private var isFavorite: Boolean = false
+    private lateinit var imgTitle: String
+    private lateinit var imageUrl: String
+    private var cookingTime: Int = 0
+    private lateinit var heading: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             recipeId = it.getInt(ARG_RECIPE_ID)
         }
+
+        database = FavouritesDB.getDatabase(requireContext())
     }
 
     override fun onCreateView(
@@ -35,6 +55,51 @@ class Full_Recipie_Dishoverview : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_full__recipie__dishoverview, container, false)
+
+        val back=view.findViewById<ImageView>(R.id.back_arrow)
+        back.setOnClickListener{
+            val nextFragment = recipeId?.let { id -> IngredientsDishOverview.newInstance(id) }
+            dismiss()
+            nextFragment?.show(parentFragmentManager, "IngredientsDishOverview")
+        }
+
+        // NEW: Favorite icon handling
+        val favoriteImage = view.findViewById<ImageView>(R.id.favourites_dishOverview)
+        favoriteImage.setOnClickListener {
+            toggleFavoriteStatus(favoriteImage) // NEW: Handle favorite toggle
+        }
+
+        recipeId?.let { checkIfFavorite(it) }
+
+        btn1 = view.findViewById(R.id.ingredient_image)
+        btn1.setOnClickListener{
+            val nextFragment = recipeId?.let { id -> DishOverview.newInstance(id) }
+            dismiss()
+            nextFragment?.show(parentFragmentManager, "DishOverview")
+        }
+
+        btn2 = view.findViewById(R.id.full_recipie_image)
+        btn2.setOnClickListener{
+            val nextFragment = recipeId?.let { id -> IngredientsDishOverview.newInstance(id) }
+            dismiss()
+            nextFragment?.show(parentFragmentManager, "IngredientsDishOverview")
+        }
+
+        //passing id to the next fragment
+        button_dishOverview = view.findViewById(R.id.btn_fullRecipie_dishoverview)
+        button_dishOverview.setOnClickListener {
+            val nextFragment = recipeId?.let {
+                id -> similar_recipe_dishoverview.newInstance(
+                recipeId = id,
+                imgUrl = imageUrl,
+                imgTitle = imgTitle,
+                cookingTime = cookingTime,
+                heading = heading
+                )
+            }
+            dismiss()
+            nextFragment?.show(parentFragmentManager, "fragment_full__recipie__dishoverview")
+        }
 
         val equipment_rv = view.findViewById<RecyclerView>(R.id.equipments_rv)
         equipment_rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -101,16 +166,87 @@ class Full_Recipie_Dishoverview : BottomSheetDialogFragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val bottomsheet = dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomsheet.let {
+            val behaviour = it?.let { it1 -> BottomSheetBehavior.from(it1) }
+            val maxHeight = (resources.displayMetrics.heightPixels * 0.8).toInt()
+            if (it != null) {
+                it.layoutParams.height = maxHeight
+            }
+            behaviour?.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    private fun checkIfFavorite(recipeId: Int) {
+        // Observe LiveData to get the favorites list
+        database.favouritesDAO().getAllFavorites().observe(viewLifecycleOwner) { favoritesList ->
+            val favorite = favoritesList.find { it.id == recipeId }
+            isFavorite = favorite != null
+            val favoriteImage = view?.findViewById<ImageView>(R.id.favourites_dishOverview)
+            favoriteImage?.setImageResource(
+                if (isFavorite) R.drawable.heart_filled
+                else R.drawable.heart_empty
+            )
+        }
+    }
+
+    private fun toggleFavoriteStatus(favoriteImage: ImageView) {
+        lifecycleScope.launch {
+            recipeId?.let { id ->
+                if (isFavorite) {
+                    removeFromFavorites(id) // NEW: Remove from favorites
+                    favoriteImage.setImageResource(R.drawable.heart_empty)
+                    isFavorite = false
+                } else {
+                    addToFavorites(id) // NEW: Add to favorites
+                    favoriteImage.setImageResource(R.drawable.heart_filled)
+                    isFavorite = true
+                }
+            }
+        }
+    }
+
+    private suspend fun addToFavorites(recipeId: Int) {
+
+        val favorite = FavouritesEntity(recipeId, imgTitle, imageUrl, cookingTime)
+        withContext(Dispatchers.IO) {
+            Log.d("DatabaseDebug", "Title: $imgTitle, Image URL: $imageUrl, Cooking Time: $cookingTime")
+
+            database.favouritesDAO().addToFavorites(favorite)
+        }
+        Toast.makeText(requireContext(), "Added to favorites", Toast.LENGTH_SHORT).show()
+    }
+
+
+    private suspend fun removeFromFavorites(recipeId: Int) {
+        val favorite = FavouritesEntity(recipeId, "", "", 0) // Only ID is needed to remove
+        withContext(Dispatchers.IO) {
+            database.favouritesDAO().removeFromFavorites(favorite)
+        }
+        Toast.makeText(requireContext(), "Removed from favorites", Toast.LENGTH_SHORT).show()
+    }
+
     private fun fetchRecipeView() {
-        val apiKey = "6511024c4bb146f09491fe45f612b0ab" //"195f87d5a199467797f27b34555430e1" //"7e09bf0f61914144b91065b5d90803ea"
+//        val apiKey = "7e09bf0f61914144b91065b5d90803ea" //"6511024c4bb146f09491fe45f612b0ab" //"195f87d5a199467797f27b34555430e1" //"7e09bf0f61914144b91065b5d90803ea"
         val retrofit = RetrofitClient.retrofit
-        val call = recipeId?.let { retrofit.getRecipieView(it, apiKey) }
+        val call = recipeId?.let { retrofit.getRecipieView(it) }
 
         call?.enqueue(object : Callback<RecipieView> {
             override fun onResponse(call: Call<RecipieView>, response: Response<RecipieView>) {
                 Log.d("TAG", "onResponse: Success")
                 if (response.isSuccessful) {
                     response.body()?.let {
+
+                        imgTitle = it.title
+                        imageUrl = it.image
+                        cookingTime = it.readyInMinutes
+                        heading = it.title
+
+                        val title = view?.findViewById<TextView>(R.id.imgTitle_dishOverview)
+                        title?.text = it.title
 
                         //loading equipments
                         val list2 = mutableListOf<Equipment>()

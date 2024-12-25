@@ -1,6 +1,7 @@
 package com.hashdroid.recipe_app
 
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.hashdroid.recipe_app.network.ApiKey
 import com.hashdroid.recipe_app.network.Equipment
 import com.hashdroid.recipe_app.network.FavouritesDB
 import com.hashdroid.recipe_app.network.FavouritesEntity
@@ -33,6 +35,9 @@ class recipie_view : Fragment() {
     private var recipeId: Int? = null
     private lateinit var database: FavouritesDB
     private var isFavorite: Boolean = false
+    private lateinit var imgTitle: String
+    private lateinit var imageUrl: String
+    private var cookingTime: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,12 +150,11 @@ class recipie_view : Fragment() {
     }
 
     private suspend fun addToFavorites(recipeId: Int) {
-        val title = view?.findViewById<TextView>(R.id.recipeid_textview1)?.text.toString()
-        val imageUrl = view?.findViewById<ImageView>(R.id.fragment_dish_image)?.tag.toString()
-        val cookingTime = view?.findViewById<TextView>(R.id.box1_text2)?.text.toString().toInt()
 
-        val favorite = FavouritesEntity(recipeId, title, imageUrl, cookingTime)
+        val favorite = FavouritesEntity(recipeId, imgTitle, imageUrl, cookingTime)
         withContext(Dispatchers.IO) {
+            Log.d("DatabaseDebug", "Title: $imgTitle, Image URL: $imageUrl, Cooking Time: $cookingTime")
+
             database.favouritesDAO().addToFavorites(favorite)
         }
         Toast.makeText(requireContext(), "Added to favorites", Toast.LENGTH_SHORT).show()
@@ -166,9 +170,9 @@ class recipie_view : Fragment() {
     }
 
     private fun fetchRecipeView() {
-        val apiKey = "6511024c4bb146f09491fe45f612b0ab" //"195f87d5a199467797f27b34555430e1" //"7e09bf0f61914144b91065b5d90803ea"
+//        val apiKey = "6511024c4bb146f09491fe45f612b0ab" //"195f87d5a199467797f27b34555430e1" //"7e09bf0f61914144b91065b5d90803ea"
         val retrofit = RetrofitClient.retrofit
-        val call = recipeId?.let { retrofit.getRecipieView(it, apiKey) }
+        val call = recipeId?.let { retrofit.getRecipieView(it) }
 
         call?.enqueue(object : Callback<RecipieView> {
             override fun onResponse(call: Call<RecipieView>, response: Response<RecipieView>) {
@@ -181,6 +185,10 @@ class recipie_view : Fragment() {
                                 list.addAll(it.ingredients)
                             }
                         }
+
+                        imgTitle = it.title
+                        imageUrl = it.image
+                        cookingTime = it.readyInMinutes
 
                         ingredientsAdapter = IngredientsAdapter(list)
                         view?.findViewById<RecyclerView>(R.id.ingredients_rv)?.adapter = ingredientsAdapter
@@ -210,9 +218,14 @@ class recipie_view : Fragment() {
                             recipeid_textview3.text = it.instructions
                         }
 
-                        val recipeid_textview6 = view?.findViewById<TextView>(R.id.recipeid_textview6)
-                        if (recipeid_textview6 != null) {
-                            recipeid_textview6.text = it.summary
+                        // Quick Summary
+                        val summary: String = it.summary
+                        val decoded: String = Html
+                            .fromHtml(summary, Html.FROM_HTML_MODE_COMPACT)
+                            .toString()
+                        val Summary= view?.findViewById<TextView>(R.id.recipeid_textview6)
+                        if (Summary != null) {
+                            Summary.text= decoded
                         }
 
                         val box1_text2 = view?.findViewById<TextView>(R.id.box1_text2)

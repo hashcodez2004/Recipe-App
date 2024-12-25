@@ -6,13 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.hashdroid.recipe_app.network.FavoritesAdapter
 import com.hashdroid.recipe_app.network.FavouritesDB
-import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment() {
     private lateinit var db: FavouritesDB
@@ -20,13 +17,8 @@ class FavoritesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            db = Room.databaseBuilder(
-                requireContext(),
-                FavouritesDB::class.java,
-                "favourites_db"
-            ).build()
-        }
+
+        db = FavouritesDB.getDatabase(requireContext())
     }
 
     override fun onCreateView(
@@ -42,11 +34,15 @@ class FavoritesFragment : Fragment() {
 
 
         db.favouritesDAO().getAllFavorites().observe(viewLifecycleOwner) { favorites ->
-            favorites?.let {
-                Log.d("FavoritesFragment", "Number of items in DB: ${it.size}")
-                favoritesAdapter.updateData(it)
+            if (!favorites.isNullOrEmpty()) {
+                Log.d("FavoritesFragment", "Items in DB: ${favorites.size}")
+                favoritesAdapter.updateData(favorites)
+            } else {
+                Log.d("FavoritesFragment", "Database is empty!")
+                Log.d("FavoritesFragment", "$favorites")
             }
         }
+
 
         return view
     }

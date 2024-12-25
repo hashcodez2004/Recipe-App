@@ -28,6 +28,7 @@ class FavoritesAdapter(private var data: List<FavouritesEntity>) :
     override fun onBindViewHolder(holder: FavoritesViewHolder, position: Int) {
         val item = data[position]
         Log.d("FavoritesAdapter", "Binding item at position $position: ${item.img_title}")
+        holder.time.text = item.cooking_time.toString()
         holder.title.text = item.img_title
         Glide.with(holder.itemView.context).load(item.img_url).into(holder.image)
     }

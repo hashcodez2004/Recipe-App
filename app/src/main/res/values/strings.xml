@@ -26,4 +26,5 @@
     <string name="get_full_recipie">Get full recipie</string>
     <string name="full_recipe">Full recipe</string>
     <string name="get_similar_recipe">Get similar recipe</string>
+    <string name="similar_recipes">Similar recipes</string>
 </resources>
