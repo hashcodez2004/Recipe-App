@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hashdroid.recipe_app.R
 
-class FavoritesAdapter(private var data: List<FavouritesEntity>) :
+class FavoritesAdapter(private var data: List<FavouritesEntity>,
+    private val onRecipeClick: (Int) -> Unit) :
     RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
 
     inner class FavoritesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,6 +32,10 @@ class FavoritesAdapter(private var data: List<FavouritesEntity>) :
         holder.time.text = item.cooking_time.toString()
         holder.title.text = item.img_title
         Glide.with(holder.itemView.context).load(item.img_url).into(holder.image)
+
+        holder.itemView.setOnClickListener{
+            onRecipeClick(item.id)
+        }
     }
 
     override fun getItemCount() = data.size

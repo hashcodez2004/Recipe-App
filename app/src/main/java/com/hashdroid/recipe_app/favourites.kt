@@ -29,7 +29,14 @@ class FavoritesFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view2)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        favoritesAdapter = FavoritesAdapter(emptyList())
+        favoritesAdapter = FavoritesAdapter(emptyList()){ clickedId ->
+            //calling e=new instance of the recipe_view fragment
+            val recipieView = recipie_view.newInstance(clickedId)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_container, recipieView)
+                .addToBackStack(null)
+                .commit()
+        }
         recyclerView.adapter = favoritesAdapter
 
 
@@ -46,5 +53,7 @@ class FavoritesFragment : Fragment() {
 
         return view
     }
+
+
 }
 
